@@ -1,19 +1,40 @@
+
+// backend/db.js
 const mongoose = require('mongoose');
 
-main().catch(err => console.log(err));
+// Create a Schema for Users
+const userSchema = new mongoose.Schema({
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true,
+        lowercase: true,
+        minLength: 3,
+        maxLength: 30
+    },
+    password: {
+        type: String,
+        required: true,
+        minLength: 6
+    },
+    firstName: {
+        type: String,
+        required: true,
+        trim: true,
+        maxLength: 50
+    },
+    lastName: {
+        type: String,
+        required: true,
+        trim: true,
+        maxLength: 50
+    }
+});
 
-async function main() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/paytm');
-}
+// Create a model from the schema
+const User = mongoose.model('User', userSchema);
 
-const usersSchema = new mongoose.Schema({
-    name: String,
-    balance: Number
-})
-
-const users = mongoose.model('users',usersSchema)
-
-const user = new users({
-    name: Aditya,
-    balance: 2000
-})
+module.exports = {
+	User
+};

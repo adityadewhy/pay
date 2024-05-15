@@ -1,2 +1,2 @@
-const jwtSecret = "walletPay"
-module.exports = jwtSecret;
+const JWT_SECRET = "walletPay"
+module.exports = JWT_SECRET;

@@ -14,9 +14,15 @@ const authMiddleware = (req, res, next) => {
 
 	try {
 		const decoded = jwt.verify(token, JWT_SECRET);
-		req.userId = decoded.userId;
 
-		next();
+		if (decoded.userId) {
+			req.userId = decoded.userId;
+			next();
+		} else {
+			return res.status(403).json({
+				message: "decoded.userId doesnt exist in the headerAuth",
+			});
+		}
 	} catch (error) {
 		return res.status(403).json({
 			message: "error 403 forbidden error",

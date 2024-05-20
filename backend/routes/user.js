@@ -1,8 +1,9 @@
 const express = require("express");
-import {User} from "../db";
+import {User, userAccount} from "../db";
 const z = require("zod");
 import JWT_SECRET from "../config";
 const {authMiddleware} = require("../middleware");
+const genRandomBalance = require("../randomBalanceGenerate")
 
 const router = express.Router();
 
@@ -49,6 +50,12 @@ router.post("/signup", async (req, res) => {
 		username: body.username,
 		password: body.password,
 	});
+
+	const balance = genRandomBalance();
+	await userAccount.create({
+		userId: user._id,
+		balance: balance,
+	})
 
 	const userId = user._id;
 
@@ -136,5 +143,7 @@ router.get("/bulk", async (req, res) => {
 		res.status(500).json({error: "An error occurred while fetching users."});
 	}
 });
+
+
 
 module.exports(router);

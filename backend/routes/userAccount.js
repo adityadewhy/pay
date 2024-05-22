@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-import {User, userAccount} from "../db";
+const {User, userAccount} = require ("../db");
 const {authMiddleware} = require("../middleware");
 const z = require("zod");
 
@@ -98,6 +98,4 @@ router.post("/transfer", authMiddleware, async (req, res) => {
 	await session.commitTransaction();
 });
 
-module.exports = {
-	router,
-};
+module.exports = router;

@@ -1,7 +1,7 @@
 const express = require("express");
-import {User, userAccount} from "../db";
+const {User, userAccount} = require ("../db");
 const z = require("zod");
-import JWT_SECRET from "../config";
+const JWT_SECRET = require("../config");
 const {authMiddleware} = require("../middleware");
 const genRandomBalance = require("../randomBalanceGenerate")
 
@@ -104,7 +104,7 @@ router.post("/signin", async (req, res) => {
 	});
 });
 
-router.put("/user", authMiddleware, async (req, res) => {
+router.put("/", authMiddleware, async (req, res) => {
 	const body = req.body;
 	const {success} = updateSchema.safeParse(body);
 	if (!success) {
@@ -113,7 +113,7 @@ router.put("/user", authMiddleware, async (req, res) => {
 		});
 	}
 
-	await User.findOne({
+	await User.updateOne({
 		id: req.userId,
 	});
 
@@ -146,4 +146,4 @@ router.get("/bulk", async (req, res) => {
 
 
 
-module.exports(router);
+module.exports=router;

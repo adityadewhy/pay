@@ -1,4 +1,4 @@
 // not sure about importing jsonwebtoken like this
-import 'jsonwebtoken'; 
+const jwt = require('jsonwebtoken');
 const JWT_SECRET = "walletPay"
 module.exports = JWT_SECRET;

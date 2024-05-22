@@ -4,7 +4,23 @@ import {User, userAccount} from "../db";
 const {authMiddleware} = require("../middleware");
 const z = require("zod");
 
+const balanceSchema = z.object({
+	userId: String,
+	balance: Number,
+})
+
+const transferSchema = z.object({
+	toAcc: String,
+	amount: Number,
+})
+
 router.get("/balance", authMiddleware, async (req, res) => {
+	const {success} = balanceSchema.safeParse(req.body);
+	if(!success){
+		return res.status(400).json({
+			message: "invalid req.body by zod"
+		})
+	}
 	const acc = await userAccount.findOne({
 		userId: req.userId,
 	});
@@ -14,6 +30,12 @@ router.get("/balance", authMiddleware, async (req, res) => {
 });
 
 router.post("/transfer", authMiddleware, async (req, res) => {
+	const {success} = transferSchema.safeParse(req.body);
+	if(!success){
+		return res.status(400).json({
+			message: "invalid req.body by zod"
+		})
+	}
 	const session = await mongoose.startSession();
 	session.startTransaction();
 

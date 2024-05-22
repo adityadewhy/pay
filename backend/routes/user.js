@@ -1,6 +1,7 @@
 const express = require("express");
 const {User, userAccount} = require ("../db");
 const z = require("zod");
+const jwt = require("jsonwebtoken");
 const JWT_SECRET = require("../config");
 const {authMiddleware} = require("../middleware");
 const genRandomBalance = require("../randomBalanceGenerate")

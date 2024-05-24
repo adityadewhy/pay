@@ -1,8 +1,20 @@
 // backend/db.js
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://localhost:27017/payWallet");
+mongoose.connect("mongodb://localhost:27017/payWallet", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
+const connection = mongoose.connection;
+
+connection.once('open', () => {
+  console.log('Connected to MongoDB');
+});
+
+connection.on('error', (err) => {
+  console.error('Error connecting to MongoDB:', err);
+});
 // Create a Schema for Users
 const userSchema = new mongoose.Schema({
 	username: {

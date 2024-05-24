@@ -1,40 +1,32 @@
 const express = require("express");
 const router = express.Router();
-const {User, userAccount} = require ("../db");
+const mongoose = require("mongoose");
+const {userAccount} = require("../db");
 const {authMiddleware} = require("../middleware");
-const z = require("zod");
 
-const balanceSchema = z.object({
-	userId: String,
-	balance: Number,
-})
+const z = require("zod");
 
 const transferSchema = z.object({
 	toAcc: String,
 	amount: Number,
-})
+});
 
 router.get("/balance", authMiddleware, async (req, res) => {
-	const {success} = balanceSchema.safeParse(req.body);
-	if(!success){
-		return res.status(400).json({
-			message: "invalid req.body by zod"
-		})
-	}
 	const acc = await userAccount.findOne({
 		userId: req.userId,
 	});
-	return res.status(200).json({
+	console.log(acc);
+	res.status(200).json({
 		balance: acc.balance,
 	});
 });
 
 router.post("/transfer", authMiddleware, async (req, res) => {
 	const {success} = transferSchema.safeParse(req.body);
-	if(!success){
+	if (!success) {
 		return res.status(400).json({
-			message: "invalid req.body by zod"
-		})
+			message: "invalid req.body by zod",
+		});
 	}
 	const session = await mongoose.startSession();
 	session.startTransaction();

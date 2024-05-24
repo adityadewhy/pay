@@ -2,9 +2,8 @@ const express = require("express");
 const {User, userAccount} = require ("../db");
 const z = require("zod");
 const jwt = require("jsonwebtoken");
-const JWT_SECRET = require("../config");
+const {JWT_SECRET} = require("../config");
 const {authMiddleware} = require("../middleware");
-const genRandomBalance = require("../randomBalanceGenerate")
 
 const router = express.Router();
 
@@ -30,7 +29,7 @@ router.post("/signup", async (req, res) => {
 	const body = req.body;
 	const {success} = signupSchema.safeParse(body);
 	if (!success) {
-		res.json({
+		return res.status(411).json({
 			message: "Email already taken / Incorrect inputs",
 		});
 	}
@@ -51,14 +50,12 @@ router.post("/signup", async (req, res) => {
 		username: body.username,
 		password: body.password,
 	});
-
-	const balance = genRandomBalance();
-	await userAccount.create({
-		userId: user._id,
-		balance: balance,
-	})
-
 	const userId = user._id;
+
+	await userAccount.create({
+		userId,
+		balance: 1 + Math.random() * 10000,
+	})
 
 	const token = jwt.sign(
 		{
@@ -144,7 +141,5 @@ router.get("/bulk", async (req, res) => {
 		res.status(500).json({error: "An error occurred while fetching users."});
 	}
 });
-
-
 
 module.exports=router;

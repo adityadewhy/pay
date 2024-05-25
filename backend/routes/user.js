@@ -1,5 +1,5 @@
 const express = require("express");
-const {User, userAccount} = require ("../db");
+const {User, UserAccount} = require ("../db");
 const z = require("zod");
 const jwt = require("jsonwebtoken");
 const {JWT_SECRET} = require("../config");
@@ -52,7 +52,7 @@ router.post("/signup", async (req, res) => {
 	});
 	const userId = user._id;
 
-	await userAccount.create({
+	await UserAccount.create({
 		userId,
 		balance: 1 + Math.random() * 10000,
 	})
@@ -111,7 +111,7 @@ router.put("/", authMiddleware, async (req, res) => {
 		});
 	}
 
-	await User.updateOne({
+	await User.updateOne(req.body,{
 		id: req.userId,
 	});
 

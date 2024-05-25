@@ -60,8 +60,8 @@ const userAccountSchema = new mongoose.Schema({
 
 // Create a model from the schema
 const User = mongoose.model("User", userSchema);
-const userAccount = mongoose.model("userAccount", userAccountSchema);
+const UserAccount = mongoose.model("UserAccount", userAccountSchema);
 module.exports = {
 	User,
-	userAccount,
+	UserAccount,
 };

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-const {userAccount} = require("../db");
+const {UserAccount} = require("../db");
 const {authMiddleware} = require("../middleware");
 
 const z = require("zod");
@@ -12,13 +12,27 @@ const transferSchema = z.object({
 });
 
 router.get("/balance", authMiddleware, async (req, res) => {
-	const acc = await userAccount.findOne({
-		userId: req.userId,
-	});
-	console.log(acc);
-	res.status(200).json({
-		balance: acc.balance,
-	});
+	console.log(`Route: req.userId = ${req.userId}`);
+	// const userAccount = await UserAccount.findOne({
+	// 	userId: req.userId,
+	// });
+	// console.log(userAccount);
+	// res.status(200).json({
+	// 	balance: userAccount.balance,
+	// });
+	try {
+        const userAccount = await UserAccount.findOne({ userId: req.userId });
+        console.log(`User account: ${userAccount}`);
+
+        if (!userAccount) {
+            return res.status(404).json({ message: "User account not found" });
+        }
+
+        res.status(200).json({ balance: userAccount.balance });
+    } catch (error) {
+        console.error("Error fetching user account:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
 });
 
 router.post("/transfer", authMiddleware, async (req, res) => {
@@ -33,26 +47,26 @@ router.post("/transfer", authMiddleware, async (req, res) => {
 
 	const {amount, toAcc} = req.body;
 
-	const account = await userAccount
+	const userAccount = await UserAccount
 		.findOne({
 			userId: req.userId,
 		})
 		.session(session);
 
-	if (!account) {
+	if (!userAccount) {
 		await session.abortTransaction();
 		return res.status(400).json({
 			message: "invalid user",
 		});
 	}
-	if (account.balance < amount) {
+	if (userAccount.balance < amount) {
 		await session.abortTransaction();
 		return res.status(400).json({
 			message: "insufficient balance",
 		});
 	}
 
-	const toAccount = await userAccount
+	const toAccount = await UserAccount
 		.findOne({
 			userId: toAcc,
 		})
@@ -65,7 +79,7 @@ router.post("/transfer", authMiddleware, async (req, res) => {
 		});
 	}
 
-	await userAccount
+	await UserAccount
 		.updateOne(
 			{
 				userId: req.userId,
@@ -76,7 +90,7 @@ router.post("/transfer", authMiddleware, async (req, res) => {
 		)
 		.session(session);
 
-	await userAccount
+	await UserAccount
 		.updateOne(
 			{
 				userId: toAcc,

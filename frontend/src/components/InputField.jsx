@@ -1,10 +1,11 @@
 import React from "react";
 
-const InputField = ({ label, type }) => {
+const InputField = ({ label, type, onChange}) => {
     return (
         <div className="relative mb-4">
             <input 
-                type={type} 
+                type={type}
+                onChange= {onChange}
                 id={`floating_outlined_${label}`} 
                 className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-black bg-white rounded-lg border border-blue-600  dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" 
                 placeholder=" " 

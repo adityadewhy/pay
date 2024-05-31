@@ -8,23 +8,14 @@ import Button from "../components/Button";
 function Signin() {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
-	const {navigate} = useNavigate();
+	const navigate = useNavigate();
 
 	const handleSignin = async () => {
 		try {
-			const res = await axios.post(
-				"http://localhost:3000/api/v1/user/signin",
-				{
-					username: username,
-					password: password,
-				},
-				{
-					headers: {
-						"Content-Type": "application/json",
-						// 'Content-Length': JSON.stringify({ firstName, lastName, username, password }).length,
-					},
-				}
-			);
+			const res = await axios.post("http://localhost:3000/api/v1/user/signin", {
+				username: username,
+				password: password,
+			});
 
 			const token = res.data.token;
 			localStorage.setItem("token", token);

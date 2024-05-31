@@ -42,7 +42,6 @@ function Signup() {
 						label="First Name"
 						onChange={(e) => {
                             setFirstName(e.target.value);
-                            console.log(e.target.value);
                         }}
 					/>
 					<InputField

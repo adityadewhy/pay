@@ -120,7 +120,7 @@ router.put("/", authMiddleware, async (req, res) => {
 	});
 });
 
-router.get("/bulk", async (req, res) => {
+router.get("/bulk", authMiddleware, async (req, res) => {
 	try {
 		const filter = req.query.filter || "";
 		const users = await User.find({

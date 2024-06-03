@@ -41,7 +41,7 @@ function Dashboard() {
 							<img src="logo.png" alt="logo" className="h-full mr-3" />
 							<p className="text-6xl font-bold  h-full">PayWallet</p>
 						</div>
-						<div className="right text-4xl h-full text-center underline">
+						<div className="right text-4xl h-full flex flex-row items-center underline">
 							Hello UserName
 						</div>
 					</div>

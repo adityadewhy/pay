@@ -4,9 +4,9 @@ import Users from "../components/Users"
 
 function Dashboard() {
     const [userBalance, setUserBalance] = useState("");
+    const [wait, setWait] = useState(true);
 
     useEffect(()=>{
-        console.log("useEffect running")
         const fetchBalance = async ()=>{
             try {
                 const token = localStorage.getItem("token");
@@ -15,18 +15,20 @@ function Dashboard() {
                         Authorization: `Bearer ${token}`,
                     }
                 });
-                console.log(res,"this is res");
                 setUserBalance(res.data.balance);
-                console.log("updated balance",res.data.balance);
+                setWait(false)
             } catch(error){
                 setUserBalance("error fetching balance");
-                console.log("error fetcheeeeing")
+                setWait(false)
             }
             
         };
         fetchBalance();
-            console.log("fetchBalance called");
-    },[])
+    },[]);
+
+    if(wait){
+        return <div> Fetching balance... </div>
+    }
 
 	return (
 		<div>

@@ -46,13 +46,25 @@ const Users = () => {
 				<ul>
 					{users.length > 0 ? (
 						users.map((user) => (
-							<li key={user.id} className="usersList text-1xl font-bold flex flex-row justify-between items-center">
+							<li
+								key={user.id}
+								className="usersList text-1xl font-bold flex flex-row justify-between items-center"
+							>
 								<div>
 									{user.firstName} {user.lastName} ({user.username})
 								</div>
 								<SendMoneyButton
 									onClick={(e) => {
-										navigate("/sendmoney");
+										navigate(
+											"/sendmoney?id=" +
+												user._id +
+												"&fName=" +
+												user.firstName +
+												"&lName=" +
+												user.lastName +
+												"&username=" +
+												user.username
+										);
 									}}
 								/>
 							</li>
